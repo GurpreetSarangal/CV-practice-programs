@@ -52,9 +52,9 @@ np.save('features.npy', features)
 np.save('labels.npy', labels)
 
 # face recognizer initiation
-face_recoginizer = cv.face.LBPHFaceRecognizer_create()
+face_recognizer = cv.face.LBPHFaceRecognizer_create()
 
 # train the model and save for using it in other files
-face_recoginizer.train(features, labels)
-face_recoginizer.save('face_trained.yml')
+face_recognizer.train(features, labels)
+face_recognizer.save('face_trained.yml')
 

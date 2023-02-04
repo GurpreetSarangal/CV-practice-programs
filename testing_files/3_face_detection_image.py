@@ -1,6 +1,6 @@
 import cv2 as cv
 
-img = cv.imread('C:\\Users\\DAVASR\\Documents\\AFRAAS_practice\\testing_files\\th.webp')
+img = cv.imread(r'C:\Users\DAVASR\Documents\AFRAAS_practice\train\persons\Phunsuk Wangdu\download (1).jfif')
 cv.imshow('face',img)
 
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
