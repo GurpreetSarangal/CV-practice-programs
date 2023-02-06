@@ -14,7 +14,7 @@ peoples = []
 for i in os.listdir(DIR):
     peoples.append(i)
 
-img = cv.imread(r'C:\Users\DAVASR\Documents\AFRAAS_practice\train\test\Rancho-3-idiots-aamir-khan_759.jpg')
+img = cv.imread(r'C:\Users\DAVASR\Documents\AFRAAS_practice\train\test\irani.jpg')
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
 cv.imshow('person', gray)

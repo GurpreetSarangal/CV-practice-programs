@@ -28,17 +28,17 @@ while(True):
         faces_roi = gray[y:y+h, x:x+w]
 
         label, confidence = face_recognizer.predict(faces_roi)
-        if confidence > 40 and confidence < 100:
+        if confidence > 40 :
             
 
             print(f"label : {peoples[label]}, with a confidence of {confidence}")
 
-            cv.putText(frame, str(peoples[label]), (x, y+h+30), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 255, 0), thickness=2)
+            cv.putText(frame, str(peoples[label]), (x, y+h+30), cv.FONT_HERSHEY_COMPLEX, 0.5, (0, 255, 0), thickness=2)
 
-            cv.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), thickness=2)
+        cv.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), thickness=2)
         
     
     cv.imshow("video", frame)
 
-    if cv.waitKey(1) == ord('e'):
+    if cv.waitKey(30) == ord('e'):
         break

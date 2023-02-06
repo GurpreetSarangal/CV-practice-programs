@@ -6,7 +6,7 @@ people = []
 for i in os.listdir(r'C:\Users\DAVASR\Documents\AFRAAS_practice\train\persons'):
     people.append(i)
 
-# print(people)
+print(people)
 
 haar_cascade = cv.CascadeClassifier(r'C:\Users\DAVASR\Documents\AFRAAS_practice\testing_files\haar_face.xml')
 
@@ -48,13 +48,13 @@ features = np.array(features, dtype='object')
 labels = np.array(labels)
 
 # and save them
-np.save('features.npy', features)
-np.save('labels.npy', labels)
+np.save(r'testing_files\features.npy', features)
+np.save(r'testing_files\labels.npy', labels)
 
 # face recognizer initiation
 face_recognizer = cv.face.LBPHFaceRecognizer_create()
 
 # train the model and save for using it in other files
 face_recognizer.train(features, labels)
-face_recognizer.save('face_trained.yml')
+face_recognizer.save(r'testing_files\face_trained.yml')
 
