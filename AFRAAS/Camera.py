@@ -56,10 +56,7 @@ class Camera:
         pathForNewFace = os.path.join(path, str(id) + "_" + name)
         
         # ! check if user is already registered or not
-        # if(os.path.exists(pathforNewFace) == True):
-        #     if(len(os.listdir(pathforNewFace)) > 0):
-        #         message = "Looks like a face is already registered with same name"
-        #         raise Exception(message)
+        
 
         os.mkdir(pathForNewFace)
         haar_cascade = cv.CascadeClassifier(self.pathToCascade)

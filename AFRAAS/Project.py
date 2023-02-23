@@ -1,5 +1,11 @@
+from Camera import Camera
+from Recognizer import Recognizer
+
+
 class Project:
-    def __init__(self):
+    def __init__(self, camera):
+        self.conn = Camera.connect(camera)
+        self.cascade = Recognizer()
         pass
 
     def start(self):
