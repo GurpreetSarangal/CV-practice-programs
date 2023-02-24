@@ -1,4 +1,5 @@
 import cv2 as cv
+import os
 
 
 
@@ -10,14 +11,24 @@ class Recognizer:
             self.cascade = cv.CascadeClassifier(self.pathToCascade)
             self.model = cv.face.LBPHFaceRecognizer_create()
             self.model.read(model)
-            
+
         except:
-            message = "haar cascade file is not found on the path provided"
+            message = "haar cascade or model is not found on the path provided"
             raise Exception(message)
         
-    def whoIs(self, Frame):
-        label, confidence = self
-        pass
+        self.DIR = r'resources\database\persons'
+        self.peoples = []
+
+        for i in os.listdir(self.DIR):
+            self.peoples.append(i)
+        
+    def whoIs(self, Face_roi):
+        label, confidence = self.model.predict(Face_roi)
+        if confidence >= 50:
+            return self.peoples[label], confidence
+        else:
+            return "", False
+        
     def cropToFace(self, Frame):
         gray = cv.cvtColor(Frame, cv.COLOR_RGB2GRAY)
         # cv.imshow("testing", gray)

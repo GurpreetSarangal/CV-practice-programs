@@ -14,7 +14,8 @@ from .Recognizer import *
 def startUp():
     pass
 
-def standBy(camera=Camera(1), recognizer=Recognizer()):
+def standBy(camera=Camera(1), 
+            recognizer=Recognizer()):
     window = Project()
     while True:
         frame = camera.getFrame()
@@ -23,6 +24,9 @@ def standBy(camera=Camera(1), recognizer=Recognizer()):
         face = recognizer.cropToFace(frame)
         if face != []:
             label, confidence = recognizer.whoIs(face)
+            if confidence:
+                
+
     
     
 
