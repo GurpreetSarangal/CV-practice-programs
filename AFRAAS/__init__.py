@@ -12,20 +12,23 @@ import cv2 as cv
 #     cam = Camera(c)
 #     cam.test_Cam()
 
-def startUp():
+def startUp(cam):
     try:
-        cam = Camera(0)
+        cam = Camera(cam)
         frame = cam.getFrame()
     except:
-        cam = Camera(1)
+        if cam == 1:
+            cam = 0
+        elif cam == 0:
+            cam = 1
+        cam = Camera(cam)
     rec = Recognizer()
 
     return cam, rec
 
 
 
-def standBy(camera, 
-            recognizer):
+def standBy(camera, recognizer):
     window = Project()
     prev_label = ''
     count = 0
@@ -52,10 +55,10 @@ def standBy(camera,
             break
         
 
-def boot():
-    
-    cam, rec = startUp()
+def boot(cam=0):
+    cam, rec = startUp(cam)
     standBy(camera= cam, recognizer= rec)
+
 
 def mark_attendance(label):
     print(label)
