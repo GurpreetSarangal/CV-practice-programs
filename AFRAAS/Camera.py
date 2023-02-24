@@ -9,9 +9,16 @@ class Camera:
     def __init__(self, cam):
         self.AllModes = [(0, cv.CAP_DSHOW), (1, None)]
         self.SelectedMode = self.AllModes[cam]
-        self.pathToCascade = r"resources\models\haar_face.xml"
-        self.pathToRecognizer = r"resources\models\face_trained.yml"
-        self.pathToDatabase = r"resources\database\persons"
+        self.pathToCascade = r"AFRAAS\resources\models\haar_face.xml"
+        self.pathToRecognizer = r"AFRAAS\resources\models\face_trained.yml"
+        self.pathToDatabase = r"AFRAAS\resources\database\persons"
+        if cam==1:
+            self.capture = cv.VideoCapture(self.SelectedMode[0])
+        else:
+            self.capture = cv.VideoCapture(self.SelectedMode[0], self.SelectedMode[1])
+        
+        
+        
         
         
 
@@ -21,45 +28,31 @@ class Camera:
         else:
             capture = cv.VideoCapture(self.SelectedMode[0], self.SelectedMode[1])
         
-        self.capture = capture
+        return capture
 
     def getFrame(self):
-        if self.capture == None:
-            self.connect()
-        
         isRead, Frame = self.capture.read()
-        if isRead:
-            return Frame
-        else:
-            return None
+        return Frame
+        
         
     
-        if (haar_cascade==None):
-            haar_cascade = cv.CascadeClassifier(self.pathToCascade)
-        gray = self.toGrayScale(Frame)
-        frame_roi = haar_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=7)
-
-        first_face_indices = frame_roi[0]
-        try:
-            x, y, w, h = first_face_indices
-        except:
-            return None
-        return Frame[x:x+w, y:y+h]
+        
 
     def toGrayScale(self, Frame):
         return cv.cvtColor(Frame, cv.COLOR_BGR2GRAY)
     
-    def saveImg(self, Frame, name,path=r"resources\database\persons"):
+    def saveImg(self, Frame, name):
+
         cv.imwrite(f"{name}.jpg", Frame)
 
-    def addNewFace(self, name, path=r"resources\database\persons"):
+    def addNewFace(self, name):
         try:
-            id = len(os.listdir(path)) + 1
+            id = len(os.listdir(self.pathToDatabase)) + 1
         except:
             message = "given path is not found"
             raise Exception(message)
 
-        pathForNewFace = os.path.join(path, str(id) + "_" + name)
+        pathForNewFace = os.path.join(self.pathToDatabase, str(id) + "_" + name)
         
         # ! check if user is already registered or not
         
@@ -67,7 +60,7 @@ class Camera:
         os.mkdir(pathForNewFace)
         haar_cascade = cv.CascadeClassifier(self.pathToCascade)
         # os.chdir(self.pathToDatabase)
-        self.connect()
+        # self.connect()
         tempId = 1
         threshold = 0
         try:
@@ -100,7 +93,7 @@ class Camera:
             cv.destroyAllWindows()
         
     def test_Cam(self):
-        self.connect()
+        # self.connect()
         while(True):
             frame = self.getFrame()
             cv.imshow("test", frame)
@@ -117,6 +110,10 @@ class Camera:
     def removeFace(self):
         pass
     
-    def __del__(self):
-        print("Camera object is destroyed")
+    def mark(self, Frame, label, x, y, w, h):
+        cv.putText(Frame, str(label), (x, y+h+30), cv.FONT_HERSHEY_COMPLEX, 0.5, (0,255,0), thickness=2)
+        cv.rectangle(Frame, (x,y), (x+w, y+h), (0,255,0), thickness=2)
+    
+    def __del__(self):      
+        self.capture.release()
         cv.destroyAllWindows()

@@ -4,7 +4,9 @@ import os
 
 
 class Recognizer:
-    def __init__(self, cascade=r"resources\models\haar_face.xml", model=r"resources\models\face_trained.yml"):
+    def __init__(self, 
+                cascade=r"AFRAAS\resources\models\haar_face.xml", 
+                model=r"AFRAAS\resources\models\face_trained.yml"):
         self.pathToCascade = cascade
         self.pathToModel = model
         try:
@@ -16,13 +18,14 @@ class Recognizer:
             message = "haar cascade or model is not found on the path provided"
             raise Exception(message)
         
-        self.DIR = r'resources\database\persons'
+        self.DIR = r'AFRAAS\resources\database\persons'
         self.peoples = []
 
         for i in os.listdir(self.DIR):
             self.peoples.append(i)
         
     def whoIs(self, Face_roi):
+        Face_roi = cv.cvtColor(Face_roi, cv.COLOR_BGR2GRAY)
         label, confidence = self.model.predict(Face_roi)
         if confidence >= 50:
             return self.peoples[label], confidence
@@ -36,10 +39,10 @@ class Recognizer:
 
         try:
             first_face_indices = frame_roi[0]
-            x, y, w, h = first_face_indices
+            self.x, self.y, self.w, self.h = first_face_indices
         except:
             return []
-        return Frame[y:y+h, x:x+w]
+        return Frame[self.y:self.y+self.h, self.x:self.x+self.w]
         
     def prepareDataSet(self):
         pass

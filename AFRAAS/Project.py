@@ -1,5 +1,6 @@
 from .Camera import Camera
 from .Recognizer import Recognizer
+import cv2 as cv
 
 
 class Project:
@@ -18,7 +19,8 @@ class Project:
         pass
 
     def dashboard(self, Frame):
-        pass
+        cv.imshow("video", Frame)
+        
 
     def initiateScanning(self):
         pass
