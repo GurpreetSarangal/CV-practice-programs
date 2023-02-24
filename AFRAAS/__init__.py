@@ -1,18 +1,34 @@
-from Camera import Camera
-from Project import Project
-from Recognizer import Recognizer
+from .Camera import *
+from .Project import *
+from .Recognizer import *
 
 
-def initiate():
-    project = Project()
-    project.
+# def initiate():
+#     project = Project()
+#     project.
 
-def test(camera=1):
-    cam = Camera(camera)
-    cam.test_Cam()
+# def test(c=1):
+#     cam = Camera(c)
+#     cam.test_Cam()
 
 def startUp():
     pass
 
-def standBy():
+def standBy(camera=Camera(1), recognizer=Recognizer()):
+    window = Project()
+    while True:
+        frame = camera.getFrame()
+        window.dashboard(frame)
+
+        face = recognizer.cropToFace(frame)
+        if face != []:
+            label, confidence = recognizer.whoIs(face)
     
+    
+
+def boot():
+    cam = Camera(1)
+    rec = Recognizer()
+    startUp()
+    standBy(cam, rec)
+    pass

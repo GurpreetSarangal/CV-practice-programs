@@ -1,11 +1,10 @@
-from Camera import Camera
-from Recognizer import Recognizer
+from .Camera import Camera
+from .Recognizer import Recognizer
 
 
 class Project:
-    def __init__(self, camera):
-        self.conn = Camera.connect(camera)
-        self.cascade = Recognizer()
+    def __init__(self):
+        
         pass
 
     def start(self):
@@ -18,7 +17,7 @@ class Project:
     def registerNewFace(self):
         pass
 
-    def dashboard(self):
+    def dashboard(self, Frame):
         pass
 
     def initiateScanning(self):

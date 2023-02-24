@@ -2,6 +2,7 @@ import cv2 as cv
 import shutil
 import numpy as np
 import os
+from .Recognizer import Recognizer
 
 
 class Camera:
@@ -11,6 +12,8 @@ class Camera:
         self.pathToCascade = r"resources\models\haar_face.xml"
         self.pathToRecognizer = r"resources\models\face_trained.yml"
         self.pathToDatabase = r"resources\database\persons"
+        
+        
 
     def connect(self):
         if self.SelectedMode[1] == None:
@@ -18,16 +21,19 @@ class Camera:
         else:
             capture = cv.VideoCapture(self.SelectedMode[0], self.SelectedMode[1])
         
-        return capture
+        self.capture = capture
 
-    def getFrame(self, capture):
-        isRead, Frame = capture.read()
+    def getFrame(self):
+        if self.capture == None:
+            self.connect()
+        
+        isRead, Frame = self.capture.read()
         if isRead:
             return Frame
         else:
             return None
         
-    def cropToFace(self, Frame, haar_cascade=None):
+    
         if (haar_cascade==None):
             haar_cascade = cv.CascadeClassifier(self.pathToCascade)
         gray = self.toGrayScale(Frame)
@@ -61,7 +67,7 @@ class Camera:
         os.mkdir(pathForNewFace)
         haar_cascade = cv.CascadeClassifier(self.pathToCascade)
         # os.chdir(self.pathToDatabase)
-        cam = self.connect()
+        self.connect()
         tempId = 1
         threshold = 0
         try:
@@ -70,13 +76,13 @@ class Camera:
                     message = "Person is not in frame"
                     raise Exception(message)
                 
-                frame = self.getFrame(cam)
+                frame = self.getFrame()
                 if frame == None:
                     message = "Maybe camera was disconnected"
                     raise Exception(message)
 
                 cv.imshow("Recording You...", frame)        
-                face = self.cropToFace(frame, haar_cascade)
+                face = Recognizer.cropToFace(frame, haar_cascade)
 
                 if(face == None):
                     threshold += 1
@@ -91,23 +97,18 @@ class Camera:
             shutil.rmtree(pathForNewFace)
             print(e)
         finally:
-            cam.release()
             cv.destroyAllWindows()
         
-
-            
-
-
-
-
-
-
-
     def test_Cam(self):
-        capture = self.connect()
+        self.connect()
         while(True):
-            frame = self.getFrame(capture)
+            frame = self.getFrame()
             cv.imshow("test", frame)
+            rec = Recognizer()
+            # rec.cropToFace(frame)
+            cropped = rec.cropToFace(frame)
+            if cropped != []:
+                cv.imshow("face", cropped)
             if cv.waitKey(20) == ord('e'):
                 break
 
@@ -116,3 +117,6 @@ class Camera:
     def removeFace(self):
         pass
     
+    def __del__(self):
+        print("Camera object is destroyed")
+        cv.destroyAllWindows()
