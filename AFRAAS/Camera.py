@@ -58,9 +58,9 @@ class Camera:
             message = "given path is not found"
             raise Exception(message)
 
-        s = str(id) + "_" + name
-        print(s)
-        pathForNewFace = os.path.join(self.pathToDatabase, s)
+        name_with_id = str(id) + "_" + name
+        print(name_with_id)
+        pathForNewFace = os.path.join(self.pathToDatabase, name_with_id)
 
         print(pathForNewFace)
         
@@ -97,15 +97,16 @@ class Camera:
                         threshold += 1
                     
                 else:             
-                    self.saveImg(face, s+"_"+str(tempId))
+                    self.saveImg(face, name_with_id+"_"+str(tempId))
                     tempId += 1
                     self.mark(frame, 
-                            "saving as "+s+"_"+str(tempId), 
+                            "saving as "+name_with_id+"_"+str(tempId), 
                             recognizer.x, 
                             recognizer.y, 
                             recognizer.w, 
                             recognizer.h)
                     threshold = 0
+                    recognizer.prepareDataSet(face, name_with_id)
 
                 window.registerNewFace(frame)
                 if tempId >= 100 or cv.waitKey(20) == ord('e') :
