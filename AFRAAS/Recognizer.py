@@ -68,15 +68,66 @@ class Recognizer:
         self.labels.append(label)
 
 
+    def resetDataSet(self):
+        l = np.load(self.pathToLabels)
+        self.labels = l.tolist()
+
+        f = np.load(self.pathToFeatures, allow_pickle=True)
+        self.features = f.tolist()
+
     
     def saveChangedDataset(self):
-        self.features = np.array(self.features, dtype='object')
-        self.labels = np.array(self.labels)
-        np.save(self.pathToFeatures, self.features)
-        np.save(self.pathToLabels, self.labels)
+        features = np.array(self.features, dtype='object')
+        labels = np.array(self.labels)
+
+        # pathL = os.path.abspath(self.pathToLabels)
+        # print(pathL)
+        # pathB = os.path.abspath(self.pathToFeatures)
+        # print(pathB)
+
+        # print(features, labels)
+
+        np.save(self.pathToFeatures, features)
+        np.save(self.pathToLabels, labels)
+        self.trainRecognizer(features, labels)
 
 
-    def trainRecognizer(self):
-        pass
-    
+    def trainRecognizer(self, feat_array, label_array):
+        new_trained_model = cv.face.LBPHFaceRecognizer_create()
+        
+        new_trained_model.train(feat_array, label_array)
+
+        self.model = new_trained_model
+        self.model.save(self.pathToModel)
+        
+    def recompileDataSet(self):
+        try:
+            people = []
+            features = []
+            labels = []
+            for i in os.listdir(self.DIR):
+                people.append(i)
+                pathToUser = os.path.join(self.DIR, i)
+                label = people.index(i)
+
+                for img in os.listdir(pathToUser):
+                    imgPath = os.path.join(pathToUser, img)
+                    img_arr = cv.imread(imgPath)
+                    img_arr = cv.cvtColor(img_arr, cv.COLOR_BGR2GRAY)
+                    features.append(img_arr)
+                    labels.append(label)
+            
+            self.people = people        
+            self.features = features
+            self.labels = labels
+            self.saveChangedDataset()
+        except:
+            message = "recompilation was unsuccessful"
+            raise Exception(message)
+
+
+
+
+        
+
        

@@ -59,10 +59,10 @@ class Camera:
             raise Exception(message)
 
         name_with_id = str(id) + "_" + name
-        print(name_with_id)
+        # print(name_with_id)
         pathForNewFace = os.path.join(self.pathToDatabase, name_with_id)
 
-        print(pathForNewFace)
+        # print(pathForNewFace)
         
         # ! check if user is already registered or not
         
@@ -111,12 +111,15 @@ class Camera:
                 window.registerNewFace(frame)
                 if tempId >= 100 or cv.waitKey(20) == ord('e') :
                     break
-        except Exception as e:
             os.chdir(self.absPath)
-            
+            recognizer.saveChangedDataset()
+        except Exception as e:  
+            os.chdir(self.absPath)
             shutil.rmtree(pathForNewFace)
+            recognizer.resetDataSet()
             print(e)
         finally:
+
             cv.destroyAllWindows()
         
     def test_Cam(self):
@@ -132,10 +135,17 @@ class Camera:
             if cv.waitKey(20) == ord('e'):
                 break
 
-    def updateFace(self):
+    def updateFace(self, name):
+
         pass
-    def removeFace(self):
-        pass
+
+    def removeFace(self, name):
+        pathForNewFace = os.path.join(self.pathToDatabase, name)
+        shutil.rmtree(pathForNewFace)
+        rec = Recognizer()
+        rec.recompileDataSet()
+
+        
     
     def mark(self, Frame, label, x, y, w, h):
         cv.putText(Frame, str(label), (x, y+h+30), cv.FONT_HERSHEY_COMPLEX, 0.5, (0,255,0), thickness=2)

@@ -63,3 +63,7 @@ def mark_attendance(label):
 def addNewFace(name):
     camera, rec = startUp()
     camera.addNewFace(name.lower())
+
+def removeFace(name):
+    camera, rec = startUp()
+    camera.removeFace(name)
