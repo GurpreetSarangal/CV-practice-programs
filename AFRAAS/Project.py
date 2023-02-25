@@ -1,5 +1,3 @@
-from .Camera import Camera
-from .Recognizer import Recognizer
 import cv2 as cv
 
 
@@ -15,8 +13,9 @@ class Project:
     def intro(self):
         pass
 
-    def registerNewFace(self):
-        pass
+    def registerNewFace(self, Frame):
+        cv.imshow("video", Frame)
+    
 
     def dashboard(self, Frame):
         cv.imshow("video", Frame)

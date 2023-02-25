@@ -14,10 +14,19 @@ import cv2 as cv
 
 def startUp():
     try:
-        cam = Camera(0)
-        frame = cam.getFrame()
-    except:
         cam = Camera(1)
+        frame = cam.getFrame()
+        if frame == []:
+            raise Exception
+    except:
+        try:
+            cam = Camera(0)
+            frame = cam.getFrame()
+            if frame == []:
+                raise Exception
+        except:
+            message = "Niether of the cameras are connected"
+            raise Exception(message)
     rec = Recognizer()
 
     return cam, rec
@@ -53,9 +62,12 @@ def standBy(camera,
         
 
 def boot():
-    
     cam, rec = startUp()
     standBy(camera= cam, recognizer= rec)
 
 def mark_attendance(label):
     print(label)
+
+def addNewFace(name):
+    camera, rec = startUp()
+    camera.addNewFace(name.lower())

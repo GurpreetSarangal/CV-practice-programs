@@ -3,6 +3,7 @@ import shutil
 import numpy as np
 import os
 from .Recognizer import Recognizer
+from .Project import Project
 
 
 class Camera:
@@ -16,6 +17,8 @@ class Camera:
             self.capture = cv.VideoCapture(self.SelectedMode[0])
         else:
             self.capture = cv.VideoCapture(self.SelectedMode[0], self.SelectedMode[1])
+        
+        self.absPath = os.path.abspath('')
         
         
         
@@ -32,7 +35,10 @@ class Camera:
 
     def getFrame(self):
         isRead, Frame = self.capture.read()
-        return Frame
+        if isRead:
+            return Frame
+        else:
+            return []
         
         
     
@@ -52,41 +58,61 @@ class Camera:
             message = "given path is not found"
             raise Exception(message)
 
-        pathForNewFace = os.path.join(self.pathToDatabase, str(id) + "_" + name)
+        s = str(id) + "_" + name
+        print(s)
+        pathForNewFace = os.path.join(self.pathToDatabase, s)
+
+        print(pathForNewFace)
         
         # ! check if user is already registered or not
         
+        recognizer = Recognizer()
+        window = Project()
 
         os.mkdir(pathForNewFace)
-        haar_cascade = cv.CascadeClassifier(self.pathToCascade)
-        # os.chdir(self.pathToDatabase)
+        os.chdir(pathForNewFace)
         # self.connect()
         tempId = 1
-        threshold = 0
+        threshold = -1
         try:
             while True:
-                if threshold>=30:
+                # print(threshold)
+                if threshold >= 100:
                     message = "Person is not in frame"
                     raise Exception(message)
+                    # break
                 
                 frame = self.getFrame()
-                if frame == None:
+                if frame == []:
                     message = "Maybe camera was disconnected"
                     raise Exception(message)
 
-                cv.imshow("Recording You...", frame)        
-                face = Recognizer.cropToFace(frame, haar_cascade)
+                     
+                   
+                face = recognizer.cropToFace(frame)
+                
 
-                if(face == None):
-                    threshold += 1
-                    continue
-                
-                
-                self.saveImg(face, name+"_"+tempId)
-                tempId += 1
+                if(face == [] ):
+                    if threshold >= 0:
+                        threshold += 1
+                    
+                else:             
+                    self.saveImg(face, s+"_"+str(tempId))
+                    tempId += 1
+                    self.mark(frame, 
+                            "saving as "+s+"_"+str(tempId), 
+                            recognizer.x, 
+                            recognizer.y, 
+                            recognizer.w, 
+                            recognizer.h)
+                    threshold = 0
+
+                window.registerNewFace(frame)
                 if tempId >= 100 or cv.waitKey(20) == ord('e') :
                     break
         except Exception as e:
+            os.chdir(self.absPath)
+            
             shutil.rmtree(pathForNewFace)
             print(e)
         finally:
