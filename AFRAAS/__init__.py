@@ -12,16 +12,12 @@ import cv2 as cv
 #     cam = Camera(c)
 #     cam.test_Cam()
 
-def startUp(cam):
+def startUp():
     try:
-        cam = Camera(cam)
+        cam = Camera(0)
         frame = cam.getFrame()
     except:
-        if cam == 1:
-            cam = 0
-        elif cam == 0:
-            cam = 1
-        cam = Camera(cam)
+        cam = Camera(1)
     rec = Recognizer()
 
     return cam, rec
@@ -55,10 +51,15 @@ def standBy(camera, recognizer):
             break
         
 
-def boot(cam=0):
-    cam, rec = startUp(cam)
+def boot():
+    
+    cam, rec = startUp()
     standBy(camera= cam, recognizer= rec)
 
 
 def mark_attendance(label):
     print(label)
+
+def addNewFace(name):
+    camera, rec = startUp()
+    camera.addNewFace(name.lower())
