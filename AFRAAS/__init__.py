@@ -1,6 +1,8 @@
 from .Camera import *
 from .Project import *
 from .Recognizer import *
+
+import mysql.connector
 import cv2 as cv
 
 
@@ -58,7 +60,16 @@ def boot():
 
 
 def mark_attendance(label):
-    print(label)
+    conn = mysql.connector.connect(
+            host="localhost",
+            user="gurpreetsarangal",
+            password="Gs17032003",
+    )
+    cursor = conn.cursor()
+    cursor.execute("show databases")
+    for x in cursor:
+        print(x)
+    pass
 
 def addNewFace(name):
     camera, rec = startUp()
