@@ -51,6 +51,8 @@ class Recognizer:
             self.x, self.y, self.w, self.h = first_face_indices
         except:
             return []
+        
+        # cv.imshow("test", Frame[self.y:self.y+self.h, self.x:self.x+self.w])
         return Frame[self.y:self.y+self.h, self.x:self.x+self.w]
         
     def prepareDataSet(self, face_roi, name):

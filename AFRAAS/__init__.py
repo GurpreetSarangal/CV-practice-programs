@@ -18,6 +18,8 @@ def startUp():
     try:
         cam = Camera(0)
         frame = cam.getFrame()
+        if frame == []:
+            raise Exception
     except:
         cam = Camera(1)
     rec = Recognizer()
@@ -60,16 +62,7 @@ def boot():
 
 
 def mark_attendance(label):
-    conn = mysql.connector.connect(
-            host="localhost",
-            user="gurpreetsarangal",
-            password="Gs17032003",
-    )
-    cursor = conn.cursor()
-    cursor.execute("show databases")
-    for x in cursor:
-        print(x)
-    pass
+    print(label)
 
 def addNewFace(name):
     camera, rec = startUp()

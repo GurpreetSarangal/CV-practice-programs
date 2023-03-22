@@ -78,40 +78,57 @@ class db:
     def createTables(self):
         cursor = self.conn.cursor()
         cursor.execute("show databases")
-        for x in cursor:
-            print(x)
+        message = "DataBase is set up"
+        
+        # for x in cursor:
+        #     print(x)
 
-        cursor.execute('''
-        CREATE TABLE Departments(
-            dept_id int,
-            dept_name VARCHAR(255),
-            PRIMARY KEY(dept_id)
-        ); ''')
+        try:
+            cursor.execute('''
+            CREATE TABLE Departments(
+                dept_id int,
+                dept_name VARCHAR(255),
+                PRIMARY KEY(dept_id)
+            ); ''')
+        except:
+            print("Departments table is already there")
+        
 
-        cursor.execute('''
-        CREATE TABLE Shifts(
-            shift_id int,
-            time_in TIME, 
-            PRIMARY KEY(shift_id)
-        ); ''')
+        try:
+            cursor.execute('''
+            CREATE TABLE Shifts(
+                shift_id int,
+                time_in TIME, 
+                PRIMARY KEY(shift_id)
+            ); ''')
+        except:
+            print("Shifts table is already there")
 
-        cursor.execute('''
-        CREATE TABLE Users(
-            name VARCHAR(255) NOT NULL,
-            dept_id int, 
-            shift_id int NOT NULL,
-            user_id int,
-            PRIMARY KEY (user_id),
-            FOREIGN KEY (dept_id) REFERENCES Departments (dept_id),
-            FOREIGN KEY (shift_id) REFERENCES Shifts (shift_id)
-        ); ''')
+        try:
+            cursor.execute('''
+            CREATE TABLE Users(
+                name VARCHAR(255) NOT NULL,
+                dept_id int, 
+                shift_id int NOT NULL,
+                user_id int,
+                PRIMARY KEY (user_id),
+                FOREIGN KEY (dept_id) REFERENCES Departments (dept_id),
+                FOREIGN KEY (shift_id) REFERENCES Shifts (shift_id)
+            ); ''')
+        except:
+            print("Users table is already there")
 
-        cursor.execute('''
-        CREATE TABLE Attendance(
-            rec_id int,
-            time_stamp TIME,
-            status enum("enter", "exit", "absent"),
-            user_id int,
-            PRIMARY KEY (rec_id),
-            FOREIGN KEY (user_id) REFERENCES Users(user_id)
-        ); ''')
+        try:
+            cursor.execute('''
+            CREATE TABLE Attendance(
+                rec_id int,
+                time_stamp TIME,
+                status enum("enter", "exit", "absent"),
+                user_id int,
+                PRIMARY KEY (rec_id),
+                FOREIGN KEY (user_id) REFERENCES Users(user_id)
+            ); ''')
+        except:
+            print("Attendance table is already there")
+        
+        print(message)
