@@ -10,16 +10,10 @@ class db:
         load_dotenv(dotenv_path = dotenv_path)
         self.conn = mysql.connector.connect(
             host="sql12.freemysqlhosting.net",
-            user="sql12606276",
-            password="phgYMTLRzM",
-            database="sql12606276",
+            user=os.getenv('AFRAAS_USER'),
+            password=os.getenv('AFRAAS_PASSWORD'),
+            database=os.getenv('AFRAAS_DATABASE'),
         )
-        # self.conn = mysql.connector.connect(
-        #     host=os.getenv('AFRAAS_HOST'),
-        #     user=os.getenv('AFRAAS_USER'),
-        #     password=os.getenv('AFRAAS_PASSWORD'),
-        #     database=os.getenv('AFRAAS_DATABASE'),
-        # )
 
     def check(self):
         cursor = self.conn.cursor()
@@ -47,6 +41,17 @@ class db:
         pass
     def viewAllUsers(self):
         pass
+    def getUserId(self, name):
+        cursor = self.conn.cursor()
+        cursor.execute(f'''
+            SELECT user_id from Users where name like '{name}' ''')
+        
+        res = cursor.fetchone()
+        if res == None:
+            return -1
+        else:
+            return res[0]
+
 
     def addNewDept(self, dept_name):
         
@@ -67,7 +72,7 @@ class db:
     def viewAllShifts(self):
         pass
 
-    def markAttendance(self, user_id, status):
+    def markAttendance(self, name, status):
         pass
     def viewAttendanceTable(self, From, To):
         pass
