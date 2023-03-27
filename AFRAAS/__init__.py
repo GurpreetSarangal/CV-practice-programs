@@ -1,6 +1,7 @@
 from .Camera import *
 from .Project import *
 from .Recognizer import *
+from db import db
 
 import mysql.connector
 import cv2 as cv
@@ -66,6 +67,8 @@ def mark_attendance(label):
 
 def addNewFace(name):
     camera, rec = startUp()
+    db_conn = db()
+    
     camera.addNewFace(name.lower())
 
 def removeFace(name):
